@@ -1,9 +1,24 @@
-﻿<div class="top-menu">
-    <img src="icons/banana.png"/>
-    @Bananas
+﻿@inject IBananaService bananaService
+@implements IDisposable
+<div class="top-menu">
+    <img src="icons/banana.png" />
+    <span class="popover-header">
+        @bananaService.Bananas
+    </span>
+    <AddBananas />
 </div>
 
 @code {
-    public int Bananas { get; set; } = 100;
+
+    protected override void OnInitialized()
+    {
+        bananaService.OnChange += StateHasChanged;
+
+    }
+
+    public void Dispose()
+    {
+        bananaService.OnChange -= StateHasChanged;
+    }
 
 }
