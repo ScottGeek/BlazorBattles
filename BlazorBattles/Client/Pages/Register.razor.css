@@ -1,0 +1,10 @@
+﻿.required::after {
+    content: " *";
+    font-weight: bold;
+    color: red;
+
+}
+
+.padRadio::after {
+    padding-right: 5px;
+}
