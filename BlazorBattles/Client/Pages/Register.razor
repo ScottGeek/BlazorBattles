@@ -2,6 +2,7 @@
 @inject IUnitService unitService
 @inject IJSRuntime jsRuntime
 @inject NavigationManager navMgr
+@inject IBananaService bananaService
 
 
 <h3>Register</h3>
@@ -63,6 +64,11 @@
 @code {
 
     private UserRegister user = new UserRegister();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await unitService.LoadUnitAsync();
+    }
 
     private void HandleRegistration()
     {
