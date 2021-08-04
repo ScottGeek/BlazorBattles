@@ -34,22 +34,10 @@
     }
 
 
-    public void BuildUnit()
+    public async Task BuildUnit()
     {
-        
-        var selectedUnit = unitService.Units.FirstOrDefault(unit => unit.Id == selectedUnitId);
-
-        if (bananaService.Bananas < selectedUnit.BananaCost)
-        {
-            needMoreBananas = true;
-            toastService.ShowError("Not Enought Bananas!",":(");
-            return;
-        }
-
-        needMoreBananas = false;
-
-        bananaService.EatBananas(selectedUnit.BananaCost);
-        unitService.AddUnit(selectedUnitId);
+ 
+        await unitService.AddUnit(selectedUnitId);
 
     }
 

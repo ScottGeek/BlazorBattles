@@ -1,13 +1,15 @@
 ﻿@inject ILocalStorageService localStorage
 @inject AuthenticationStateProvider authenticationStateProvider
+@inject IAuthService authService
+@inject IToastService toastService
 
 Please Login below or <a href="register">Register</a> for a new account.
 
 <EditForm Model="user" OnValidSubmit="HandleLogin">
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <div class="form-group">
-        <label for="username">Username</label>
-        <InputText id="username" @bind-Value="user.Username" class=form-control></InputText>
+        <label for="email">Email</label>
+        <InputText id="email" @bind-Value="user.Email" class=form-control></InputText>
     </div>
     <div class="form-group">
         <label for="password">Password</label>
@@ -24,8 +26,19 @@ Please Login below or <a href="register">Register</a> for a new account.
 
     private async void HandleLogin()
     {
-        await localStorage.SetItemAsync<bool>("isAuthenticated", true);
-        await authenticationStateProvider.GetAuthenticationStateAsync();
+
+        var result = await authService.Login(user);
+        if (result.Success)
+        {
+            await localStorage.SetItemAsync<string>("authToken", result.Data);
+            await authenticationStateProvider.GetAuthenticationStateAsync();
+        }
+        else
+        {
+            toastService.ShowError(result.Message);
+        }
+
+
     }
 
 }

@@ -30,8 +30,8 @@ namespace BlazorBattles.Shared
         
         public DateTime DateOfBirth { get; set; } = DateTime.Now;
 
-        [Range(typeof(bool), "true", "true", ErrorMessage ="Only confirmed users can play!")]
-        public bool IsConfirmed { get; set; }
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Only confirmed users can play!")]
+        public bool IsConfirmed { get; set; } = true;
 
     }
 }

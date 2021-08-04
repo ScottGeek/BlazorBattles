@@ -1,8 +1,9 @@
 ﻿@page "/register"
 @inject IUnitService unitService
-@inject IJSRuntime jsRuntime
 @inject NavigationManager navMgr
 @inject IBananaService bananaService
+@inject IAuthService authService
+@inject IToastService toastService
 
 
 <h3>Register</h3>
@@ -70,12 +71,23 @@
         await unitService.LoadUnitAsync();
     }
 
-    private void HandleRegistration()
+    private async void HandleRegistration()
     {
-        Console.WriteLine($"store this new user in the database@");
-        jsRuntime.InvokeVoidAsync("console.log", "The full user entered: ", user);
+        var result = await authService.Register(user);
+        if (result.Success)
+        {
+            toastService.ShowSuccess(result.Message);
+            navMgr.NavigateTo("/");
+        }
+        else
+        {
+            toastService.ShowError(result.Message);
+        }
 
-        navMgr.NavigateTo("login");
+      // Console.WriteLine($"store this new user in the database@");
+      //  //One has to inject the jsruntime for this invoke to work.
+      //  jsRuntime.InvokeVoidAsync("console.log", "The full user entered: ", user);
+      //  navMgr.NavigateTo("login");
 
     }
 }
