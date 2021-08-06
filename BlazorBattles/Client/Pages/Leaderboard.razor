@@ -1,0 +1,93 @@
+﻿@page "/leaderboard"
+@inject ILeaderboardService  leaderboardService
+@inject AuthenticationStateProvider  authenticationStateProvider
+@inject IBattleService battleService
+@inject IBananaService bananaService
+@inject IToastService toastService
+
+
+
+<h3>Leaderboard</h3>
+
+@if (leaderboardService.Leaderboard == null)
+{
+    <span>Loading Leaderboard...</span>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>Victories</th>
+                <th>Defeats</th>
+                <th>Battles</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in leaderboardService.Leaderboard)
+            {
+                <tr style="@GetMyStyle(entry.UserId)">
+                    <td>@entry.Rank</td>
+                    <td>@entry.Username</td>
+                    <td>@entry.Victories</td>
+                    <td>@entry.Defeats</td>
+                    <td>@entry.Battles</td>
+                    <td>
+                        @if (entry.UserId != myUserId)
+                        {
+                            <button class="btn btn-primary" @onclick="@(() => StartBattle(entry.UserId))">Fight</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    int myUserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await leaderboardService.GetLeaderboard();
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        myUserId = int.Parse(authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+    }
+
+    public string GetMyStyle(int userId)
+    {
+        if (userId == myUserId)
+            return "color: green; font-weight: 600;";
+        else
+            return string.Empty;
+    }
+
+   public async Task StartBattle(int opponentId)
+    {
+        Console.WriteLine($"StartBattle with {opponentId}");
+        var result = await battleService.StartBattle(opponentId);
+        if (result.RoundsFought <= 0)
+        {
+            toastService.ShowInfo("The Battle did not take place.");
+        }
+        else
+        {
+            if (result.IsVictory)
+            {
+                toastService.ShowSuccess("You won the battle!");
+            }
+            else
+            {
+                toastService.ShowWarning("You have been destroyed!");
+            }
+        }
+
+        await leaderboardService.GetLeaderboard();
+        await bananaService.GetBananas();
+
+    }
+
+}

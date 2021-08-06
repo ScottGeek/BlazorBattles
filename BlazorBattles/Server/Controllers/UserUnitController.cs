@@ -26,6 +26,44 @@ namespace BlazorBattles.Server.Controllers
             _utilityService = utilityService;
         }
 
+        [HttpPost("revive")]
+        public async Task<IActionResult> ReviveArmy()
+        {
+            var user = await _utilityService.GetUser();
+            var userUnits = await _dataContext.UserUnits
+                .Where(unit => unit.UserId == user.Id)
+                .Include(unit => unit.Unit)
+                .ToListAsync();
+
+            int bananaCost = 1000;
+
+            if(user.Bananas < bananaCost)
+            {
+                return BadRequest($"Not enough Bananas you only have {user.Bananas}. You must have {bananaCost} to revive your army.");
+            }
+
+            bool armyAlreadyAlive = true;
+            foreach (var userUnit in userUnits)
+            {
+                if (userUnit.HitPoints <= 0)
+                {
+                    armyAlreadyAlive = false;
+                    userUnit.HitPoints = new Random().Next(0,userUnit.Unit.HitPoints);  //random between 0 and maybe 0
+                }
+            }
+
+            if (armyAlreadyAlive)
+            {
+                return Ok("Your army is already alive. You must fight a battle before reviving.");
+            }
+
+            user.Bananas -= bananaCost;
+
+            await _dataContext.SaveChangesAsync();
+
+            return Ok("Army revived!");
+
+        }
 
         [HttpPost]
         public async Task<IActionResult> BuildUserUnit([FromBody] int unitId)

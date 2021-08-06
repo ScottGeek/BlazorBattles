@@ -56,7 +56,7 @@ namespace BlazorBattles.Server.Data
 
         }
 
-        public async Task<ServiceReponse<int>> Register(User user, string password)
+        public async Task<ServiceReponse<int>> Register(User user, string password, int startUnit)
         {
 
             if (await UserExists(user.Email))
@@ -71,6 +71,8 @@ namespace BlazorBattles.Server.Data
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
+            await AddStartingUnit(user, startUnit);
 
             return new ServiceReponse<int> { Success = true, Data = user.Id, Message="Registration successful!"};
                 
@@ -140,5 +142,17 @@ namespace BlazorBattles.Server.Data
             return jwt;
         }
 
+        private async Task AddStartingUnit(User user, int startUnitId)
+        {
+            var unit = await _context.Units.FirstOrDefaultAsync<Unit>(u => u.Id == startUnitId);
+            _context.UserUnits.Add(new UserUnit { 
+              UnitId = unit.Id,
+              UserId = user.Id,
+              HitPoints = unit.HitPoints,
+            });
+
+            await _context.SaveChangesAsync();
+
+        }
     }
 }

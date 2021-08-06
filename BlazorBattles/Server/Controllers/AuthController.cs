@@ -32,7 +32,9 @@ namespace BlazorBattles.Server.Controllers
                    Bananas = userRegister.Bananas,
                    DateOfBirth = userRegister.DateOfBirth,
                    IsConfirmed = userRegister.IsConfirmed
-                }, userRegister.Password);
+                },
+                userRegister.Password,
+                userRegister.StartUnitId);
 
             if (!response.Success)
             {
