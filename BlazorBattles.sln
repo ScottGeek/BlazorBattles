@@ -9,6 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorBattles.Client", "Bla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorBattles.Shared", "BlazorBattles\Shared\BlazorBattles.Shared.csproj", "{0B2393AF-7673-4487-B86B-F3A9041ADA93}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql_Matters", "Sql_Matters", "{2BDF7B92-2256-4B8B-B234-E3C26D91C9EC}"
+	ProjectSection(SolutionItems) = preProject
+		Create_Tables.sql = Create_Tables.sql
+		CreateDB.SQL = CreateDB.SQL
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
