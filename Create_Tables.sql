@@ -1,6 +1,10 @@
 ﻿Use [BlazorBattleDB]
 GO
 
+-- One can remove the _EFMigrationHistory for production if one wants.
+-- Just keep in mind that on DB changes one might loose data if one does not do DB migrations...
+-- This is up to you!.
+
 IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
 BEGIN
     CREATE TABLE [__EFMigrationsHistory] (

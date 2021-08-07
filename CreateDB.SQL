@@ -1,6 +1,6 @@
 ﻿USE [master]
 GO
-
+-- Remember one must update the paths below before this script will actuall work!.
 /****** Object:  Database [BlazorBattleDB]    Script Date: 8/7/2021 11:43:23 AM ******/
 CREATE DATABASE [BlazorBattleDB]
  CONTAINMENT = NONE
