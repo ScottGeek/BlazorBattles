@@ -1,0 +1,65 @@
+﻿@page "/history"
+@inject IBattleService battleService
+
+<h3>History</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Attacker</th>
+            <th>Oppenent</th>
+            <th>Rounds</th>
+            <th>Damage</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (battleService.History.Count == 0)
+        {
+            <tr>
+                <td>There must be Battles to have History. No History found...</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var battle in battleService.History)
+            {
+                <tr style="@GetHistoryStyle(battle)">
+                    <td>@battle.BattleDate</td>
+                    <td>@battle.AttackerName</td>
+                    <td>@battle.OpponentName</td>
+                    <td>@battle.RoundsFought</td>
+                    <td>@battle.WinnerDamageDealt</td>
+                    <td>@(battle.YouWon ? "You won!" : "You lost!")</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await battleService.GetHistory();
+    }
+
+    public string GetHistoryStyle(BattleHistoryEntry battleHistoryEntry)
+    {
+        if (battleHistoryEntry.YouWon)
+        {
+            return "color: green; font-weight: 600;";
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+
+}

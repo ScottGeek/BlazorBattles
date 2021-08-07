@@ -23,7 +23,7 @@ namespace BlazorBattles.Client.Services
         public async Task AddBananas(int amount)
         {
 
-            var result = await _httpClient.PutAsJsonAsync<int>("api/user/addbananas", amount);
+            var result = await _httpClient.PostAsJsonAsync<int>("api/user/addbananas", amount);
             Bananas = await result.Content.ReadFromJsonAsync<int>();
             BananasChanged();
         }

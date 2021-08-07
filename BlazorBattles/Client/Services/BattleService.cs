@@ -11,15 +11,24 @@ namespace BlazorBattles.Client.Services
     public class BattleService : IBattleService
     {
         private readonly HttpClient _httpClient;
+        public BattleResult LastBattle { get; set; } = new BattleResult();
+        public IList<BattleHistoryEntry> History { get; set; } = new List<BattleHistoryEntry>();
 
         public BattleService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
+
         public async Task<BattleResult> StartBattle(int opponentId)
         {
             var result = await _httpClient.PostAsJsonAsync("api/battle", opponentId);
-            return await result.Content.ReadFromJsonAsync<BattleResult>();
+            LastBattle = await result.Content.ReadFromJsonAsync<BattleResult>();
+            return LastBattle;
+        }
+
+        public async Task GetHistory()
+        {
+            History = await _httpClient.GetFromJsonAsync<BattleHistoryEntry[]>("api/user/history");
         }
     }
 }
